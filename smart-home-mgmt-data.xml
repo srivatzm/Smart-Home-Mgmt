@@ -1,0 +1,12 @@
+<shm xmlns="http://shm.com/ns/smart-home-mgmt">
+       <appliances>
+          <ac>
+             <mode>mode</mode>
+             <off-timer>10</off-timer>
+             <voltage>15</voltage>
+             <current>summer</current>
+             <port>10</port>
+             <uptime>25</uptime>
+          </ac>
+       </appliances>
+</shm>
