@@ -1,0 +1,32 @@
+DEMO
+
+# sysrepoctl -u smart-home-mgmt
+# sysrepoctl -i /etc/sysrepo/yang/smart-home-mgmt.yang
+# sysrepoctl -l | grep smart
+smart-home-mgmt            | 2023-01-23 | I     | root:root | 600         |            |                                                                        
+# netopeer2-cli
+> connect --host localhost --login root
+Interactive SSH Authentication
+Type your password:
+Password: 
+> get --filter-xpath /smart-home-mgmt:*
+DATA
+
+> edit-config --target running --config=/etc/sysrepo/yang/smart-home-mgmt-data.xml
+OK
+> get --filter-xpath /smart-home-mgmt:*
+DATA
+<shm xmlns="http://shm.com/ns/smart-home-mgmt">
+  <appliances>
+    <ac>
+      <mode>mode</mode>
+      <off-timer>10</off-timer>
+      <voltage>15</voltage>
+      <current>summer</current>
+      <port>10</port>
+      <uptime>25</uptime>
+    </ac>
+  </appliances>
+</shm>
+>exit
+#

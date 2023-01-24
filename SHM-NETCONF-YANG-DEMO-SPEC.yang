@@ -1,0 +1,283 @@
+module smart-home-mgmt {
+
+      namespace "http://shm.com/ns/smart-home-mgmt";
+      prefix "shm";
+      organization "SHM Inc.";
+      contact "support@shm.com";
+      description "Smart Home Management Yang Spec.";
+      revision 2023-01-23 {
+      }
+
+      container shm {
+        uses sample-plugin-params;
+        presence
+          "An empty container indicates that the Smart Home Management service is available.";
+
+        description
+          "Represents a 'shm' resource, with a appliances and actions.";
+      }
+      grouping sample-plugin-params {
+        container appliances {
+
+          description
+            "Represents the 'shm' appliances resource.";
+            list ac {
+                key mode;
+                description
+                    "Represents one 'ac' resource within the
+                     'shm' appliances resource.";
+                leaf mode {
+                    type string;
+                    config true;
+                    description "The mode of the ac.";
+                }
+                leaf temperature {
+                    type string;
+                    description "The temperature of the ac.";
+                }
+                leaf off-timer {
+                    type string;
+                    description "The off timer of the ac";
+                }
+                leaf power-consumed {
+                    type string;
+                    description "The power consumed by the ac.";
+
+                }
+                leaf voltage {
+                    type string;
+                    description "The voltage of the ac.";
+                }
+                leaf current {
+                    type string;
+                    description "The current of the ac.";
+                }
+                leaf port {
+                    type string;
+                    description "The port identifying the ac.";
+                }
+                leaf uptime {
+                    type string;
+                    description "The uptime of the ac.";
+                }
+            }
+
+          list fridge {
+            key voltage;
+            description
+              "Represents one 'fridge' resource within the
+               'shm' appliances resource.";
+
+            leaf freezer-temperature {
+              type string;
+
+                units celcius;
+                config false;
+                mandatory false;
+              description
+                "The temperature of the freezer.";
+              }
+              leaf fridge-temperature {
+                  type string;
+                  units celcius;
+                  config false;
+                  mandatory false;
+                  description "The temperature of the fridge.";
+              }
+              leaf power-consumed {
+                    type string;
+                    description "The power consumed by the ac.";
+
+                }
+                leaf voltage {
+                    type string;
+                    description "The voltage of the ac.";
+                }
+                leaf current {
+                    type string;
+                    description "The current of the ac.";
+                }
+                leaf port {
+                    type string;
+                    description "The port identifying the ac.";
+                }
+                leaf uptime {
+                    type string;
+                    description "The uptime of the ac.";
+                }
+
+          }
+          leaf appliance-count {
+             type uint32;
+             units "count";
+             config false;
+             description
+               "Number of appliances managed in the shm.";
+          }
+        }
+      }
+
+      rpc configure-appliance {
+        description
+          "Control function for configuring an appliance in the SHM.";
+        input {
+            leaf port {
+                type string;
+                description "The port identifying the appliance.";
+            }
+        }
+          output  {
+              leaf status {
+                type string;
+                description "response code";
+              }
+          }
+      }
+       rpc poll-appliance {
+           description "Function for polling an appliance in the SHM.";
+           input  {
+               leaf port {
+                   type string;
+                   description "The port identifying the appliance.";
+               }
+           }
+           output  {
+               choice appliance {
+                   case ac {
+                       leaf temperature {
+                           type string;
+                           units celcius;
+                           mandatory false;
+                           description "The temperature of the ac.";
+                       }
+                       leaf mode {
+                           type string;
+                           description "The mode of the ac.";
+                       }
+                       leaf off-timer {
+                           type string;
+                           description "The off timer of the ac";
+                       }
+                   }
+                   case fridge {
+                       leaf freezer-temperature {
+                           type string;
+                           units celcius;
+                           mandatory false;
+                           description "The temperature of the freezer.";
+                       }
+                       leaf fridge-temperature {
+                           type string;
+                           units celcius;
+                           mandatory false;
+                           description "The temperature of the fridge.";
+                       }
+                   }
+               }
+           }
+       }
+       rpc manage-appliance {
+           description "Function for managing an appliance in the SHM.";
+           input  {
+               leaf port {
+                   type string;
+                   description "The port identifying the appliance.";
+               }
+               leaf action {
+                    type string;
+                    description "Command to be sent to the appliance.";
+               }
+           }
+           output  {
+               leaf status {
+                   type string;
+                   description "response code";
+               }
+          }
+       }
+       rpc metrics {
+           description "Function for retrieving metrics of an appliance in the SHM.";
+           input  {
+               leaf port {
+                   type string;
+                   description "The port identifying the appliance.";
+               }
+           }
+           output  {
+               choice appliance {
+                   case ac {
+                       leaf temperature {
+                           type string;
+                           units celcius;
+                           mandatory false;
+                           description "The temperature of the ac.";
+                       }
+                       leaf mode {
+                           type string;
+                           description "The mode of the ac.";
+                       }
+                       leaf off-timer {
+                           type string;
+                           description "The off timer of the ac";
+                       }
+leaf power-consumed {
+                    type string;
+                    description "The power consumed by the ac.";
+
+                }
+                leaf voltage {
+                    type string;
+                    description "The voltage of the ac.";
+                }
+                leaf current {
+                    type string;
+                    description "The current of the ac.";
+                }
+                leaf port {
+                    type string;
+                    description "The port identifying the ac.";
+                }
+                leaf uptime {
+                    type string;
+                    description "The uptime of the ac.";
+                }
+                   }
+                   case fridge {
+                       leaf freezer-temperature {
+                           type string;
+                           units celcius;
+                           mandatory false;
+                           description "The temperature of the freezer.";
+                       }
+                       leaf fridge-temperature {
+                           type string;
+                           units celcius;
+                           mandatory false;
+                           description "The temperature of the fridge.";
+                       }
+                leaf power-consumed1 {
+                    type string;
+                    description "The power consumed by the ac.";
+
+                }
+                leaf voltage1 {
+                    type string;
+                    description "The voltage of the ac.";
+                }
+                leaf current1 {
+                    type string;
+                    description "The current of the ac.";
+                }
+                leaf port1 {
+                    type string;
+                    description "The port identifying the ac.";
+                }
+                leaf uptime1 {
+                    type string;
+                    description "The uptime of the ac.";
+                }
+                   }
+               }
+           }
+       }
+   }
