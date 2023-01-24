@@ -1,0 +1,403 @@
+   module smart-home-mgmt {
+
+      namespace "http://shm.com/ns/smart-home-mgmt";
+      prefix "shm";
+      organization "SHM Inc.";
+      contact "support@shm.com";
+      description "Smart Home Management Yang Spec.";
+      revision 2023-01-23 {
+      }
+
+      identity ip-address {
+        description
+          "ip-address for all appliance types.";
+      }
+
+      identity port {
+        description
+          "Port of Appliance.";
+      }
+      identity power-consumed {
+        description
+          "Power Consumed by an appliance";
+      }
+      identity voltage {
+        description
+          "Voltage of an appliance";
+      }
+      identity current {
+        description
+          "Current of an appliance.";
+      }
+      identity uptime {
+        description
+          "Up Time of an appliance.";
+      }
+
+      container shm {
+        presence
+          "An empty container indicates that the Smart Home Management service is available.";
+
+        description
+          "Represents a 'shm' resource, with a appliances and actions.";
+
+        container appliances {
+
+          description
+            "Represents the 'shm' appliances resource.";
+            list ac {
+                key ip-address;
+                description 
+                    "Represents one 'ac' resource within the
+                     'shm' appliances resource.";
+                leaf temperature {
+                    type string;
+                    units celcius;
+                    config false;
+                    mandatory false;
+                    description "The temperature of the ac.";
+                }
+                leaf mode {
+                    type string;
+                    description "The mode of the ac.";
+                }
+                leaf off-timer {
+                    type string;
+                    description "The off timer of the ac";
+                }
+                leaf ip-address {
+                    type identityref {
+                        base ip-address;
+                    }
+                    config true;
+                    description "The ip-address identifying the ac.";
+                }
+                leaf power-consumed {
+                    type identityref {
+                        base power-consumed;
+                    }
+                    description "The power consumed by the ac.";
+                }
+                leaf voltage {
+                    type identityref {
+                        base voltage;
+                    }
+                    description "The voltage of the ac.";
+                }
+                leaf current {
+                    type identityref {
+                        base current;
+                    }
+                    description "The current of the ac.";
+                }
+                leaf port {
+                    type identityref {
+                        base port;
+                    }
+                    description "The port identifying the ac.";
+                }
+                leaf uptime {
+                    type identityref {
+                        base uptime;
+                    }
+                    description "The uptime of the ac.";
+                }
+            }
+
+          list fridge {
+            key ip-address;
+            description
+              "Represents one 'fridge' resource within the
+               'shm' appliances resource.";
+
+            leaf freezer-temperature {
+              type string;
+              
+                units celcius;
+                config false;
+                mandatory false;
+              description
+                "The temperature of the freezer.";
+              }
+              leaf fridge-temperature {
+                  type string;
+                  units celcius;
+                  config false;
+                  mandatory false;
+                  description "The temperature of the fridge.";
+              }
+              leaf ip-address {
+                  type identityref {
+                      base ip-address;
+                  }
+                  config true;
+                  description "The ip-address identifying the Fridge.";
+              }
+              leaf power-consumed {
+                  type identityref {
+                      base power-consumed;
+                  }
+                  description "The power consumed by the Fridge.";
+              }
+              leaf voltage {
+                  type identityref {
+                      base voltage;
+                  }
+                  description "The voltage of the Fridge.";
+              }
+              leaf current {
+                  type identityref {
+                      base current;
+                  }
+                  description "The current of the Fridge.";
+              }
+              leaf port {
+                  type identityref {
+                      base port;
+                  }
+                  description "The port identifying the Fridge.";
+              }
+              leaf uptime {
+                  type identityref {
+                      base uptime;
+                  }
+                  description "The uptime of the Fridge.";
+              }  
+               
+          }
+          leaf appliance-count {
+             type uint32;
+             units "count";
+             config false;
+             description
+               "Number of appliances managed in the shm.";
+          }
+        }
+      }
+
+      rpc configure-appliance {
+        description
+          "Control function for configuring an appliance in the SHM.";
+        input {
+            leaf ip-address {
+                type identityref {
+                    base ip-address;
+                }
+                description "The ip-address identifying the appliance.";
+            }
+            leaf port {
+                type identityref {
+                    base port;
+                }
+                description "The port identifying the appliance.";
+            }
+        }
+          output  {
+              leaf status {
+                type string;
+                description "response code";
+              }
+          }
+      }
+       rpc poll-appliance {
+           description "Function for polling an appliance in the SHM.";
+           input  {
+               leaf ip-address {
+                   type identityref {
+                       base ip-address;
+                   }
+                   description "The ip-address identifying the appliance.";
+               }
+               leaf port {
+                   type identityref {
+                       base port;
+                   }
+                   description "The port identifying the appliance.";
+               }
+           }
+           output  {               
+               choice appliance {
+                   case ac {
+                       leaf temperature {
+                           type string;
+                           units celcius;
+                           mandatory false;
+                           description "The temperature of the ac.";
+                       }
+                       leaf mode {
+                           type string;
+                           description "The mode of the ac.";
+                       }
+                       leaf off-timer {
+                           type string;
+                           description "The off timer of the ac";
+                       }
+                   }
+                   case fridge {
+                       leaf freezer-temperature {
+                           type string;
+                           units celcius;
+                           mandatory false;
+                           description "The temperature of the freezer.";
+                       }
+                       leaf fridge-temperature {
+                           type string;
+                           units celcius;
+                           mandatory false;
+                           description "The temperature of the fridge.";
+                       }
+                   }
+               }
+           }
+       }
+       rpc manage-appliance {
+           description "Function for managing an appliance in the SHM.";
+           input  {
+               leaf ip-address {
+                   type identityref {
+                       base ip-address;
+                   }
+                   description "The ip-address identifying the appliance.";
+               }
+               leaf port {
+                   type identityref {
+                       base port;
+                   }
+                   description "The port identifying the appliance.";
+               }
+               leaf action {
+                    type string;
+                    description "Command to be sent to the appliance.";
+               }
+           }
+           output  {
+               leaf status {
+                   type string;
+                   description "response code";
+               }
+           }
+       }
+       rpc metrics {
+           description "Function for retrieving metrics of an appliance in the SHM.";
+           input  {
+               leaf ip-address {
+                   type identityref {
+                       base ip-address;
+                   }
+                   description "The ip-address identifying the appliance.";
+               }
+               leaf port {
+                   type identityref {
+                       base port;
+                   }
+                   description "The port identifying the appliance.";
+               }
+           }
+           output  {
+               choice appliance {
+                   case ac {
+                       leaf temperature {
+                           type string;
+                           units celcius;
+                           mandatory false;
+                           description "The temperature of the ac.";
+                       }
+                       leaf mode {
+                           type string;
+                           description "The mode of the ac.";
+                       }
+                       leaf off-timer {
+                           type string;
+                           description "The off timer of the ac";
+                       }
+                       leaf power-consumed {
+                           type identityref {
+                               base power-consumed;
+                           }
+                           description "The power consumed by the ac.";
+                       }
+                       leaf voltage {
+                           type identityref {
+                               base voltage;
+                           }
+                           description "The voltage of the ac.";
+                       }
+                       leaf current {
+                           type identityref {
+                               base current;
+                           }
+                           description "The current of the ac.";
+                       }
+                       leaf ip-address {
+                           type identityref {
+                               base ip-address;
+                           }
+                           description "The ip-address identifying the ac.";
+                       }
+                       leaf port {
+                           type identityref {
+                               base port;
+                           }
+                           description "The port identifying the ac.";
+                       }
+                       leaf uptime {
+                           type identityref {
+                               base uptime;
+                           }
+                           description "The uptime of the ac.";
+                       }
+                   }
+                   case fridge {
+                       leaf freezer-temperature {
+                           type string;
+                           units celcius;
+                           mandatory false;
+                           description "The temperature of the freezer.";
+                       }
+                       leaf fridge-temperature {
+                           type string;
+                           units celcius;
+                           mandatory false;
+                           description "The temperature of the fridge.";
+                       }
+                       leaf power-consumed1 {
+                           type identityref {
+                               base power-consumed;
+                           }
+                           description "The power consumed by the Fridge.";
+                       }
+                       leaf voltage1 {
+                           type identityref {
+                               base voltage;
+                           }
+                           description "The voltage of the Fridge.";
+                       }
+                       leaf current1 {
+                           type identityref {
+                               base current;
+                           }
+                           description "The current of the Fridge.";
+                       }
+                       leaf ip-address1 {
+                           type identityref {
+                               base ip-address;
+                           }
+                           description "The ip-address identifying the Fridge.";
+                       }
+                       leaf port1 {
+                           type identityref {
+                               base port;
+                           }
+                           description "The port identifying the Fridge.";
+                       }
+                       leaf uptime1 {
+                           type identityref {
+                               base uptime;
+                           }
+                           description "The uptime of the Fridge.";
+                       }
+                   }
+               }
+           }
+       }
+   }

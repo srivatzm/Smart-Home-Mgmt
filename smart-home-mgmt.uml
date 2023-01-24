@@ -1,0 +1,74 @@
+'Download plantuml from http://plantuml.sourceforge.net/ 
+'Generate png with java -jar plantuml.jar <file> 
+'Output in img/<module>.png 
+'If Java spits out memory error increase heap size with java -Xmx1024m  -jar plantuml.jar <file> 
+@startuml img/smart-home-mgmt.png 
+hide empty fields 
+hide empty methods 
+hide <<case>> circle
+hide <<augment>> circle
+hide <<choice>> circle
+hide <<leafref>> stereotype
+hide <<leafref>> circle
+page 1x1 
+Title smart-home-mgmt 
+note top of shm_smart_home_mgmt : <b>Namespace: </b> http://shm.com/ns/smart-home-mgmt \n<b>Prefix: </b> shm \n<b>Organization : </b>\nSHM Inc. \n<b>Contact : </b>\nsupport@shm.com \n<b>Revision : </b> 2023-01-23 \n
+package "shm:smart-home-mgmt" as shm_smart_home_mgmt { 
+class "smart-home-mgmt" as smart_home_mgmt << (M, #33CCFF) module>> 
+class "shm" as  smart_home_mgmt_I_shm <<container>> 
+smart_home_mgmt *-- "0..1" smart_home_mgmt_I_shm 
+note bottom of smart_home_mgmt_I_shm
+<b>Presence: </b>An empty container indicates that the Smart Home Management service is available.
+end note 
+class "appliances" as  smart_home_mgmt_I_shm_I_appliances <<container>> 
+smart_home_mgmt_I_shm *-- "1" smart_home_mgmt_I_shm_I_appliances 
+class "ac" as smart_home_mgmt_I_shm_I_appliances_I_ac << (L, #FF7700) list>> 
+smart_home_mgmt_I_shm_I_appliances *-- "0..N" smart_home_mgmt_I_shm_I_appliances_I_ac 
+smart_home_mgmt_I_shm_I_appliances_I_ac : temperature : string   {celcius} {Config : false}
+smart_home_mgmt_I_shm_I_appliances_I_ac : mode : string  
+smart_home_mgmt_I_shm_I_appliances_I_ac : off-timer : string  
+smart_home_mgmt_I_shm_I_appliances_I_ac : +ip-address : identityref {ip-address}  {key}  {Config : true}
+smart_home_mgmt_I_shm_I_appliances_I_ac : power-consumed : identityref {power-consumed}  
+smart_home_mgmt_I_shm_I_appliances_I_ac : voltage : identityref {voltage}  
+smart_home_mgmt_I_shm_I_appliances_I_ac : current : identityref {current}  
+smart_home_mgmt_I_shm_I_appliances_I_ac : port : identityref {port}  
+smart_home_mgmt_I_shm_I_appliances_I_ac : uptime : identityref {uptime}  
+class "fridge" as smart_home_mgmt_I_shm_I_appliances_I_fridge << (L, #FF7700) list>> 
+smart_home_mgmt_I_shm_I_appliances *-- "0..N" smart_home_mgmt_I_shm_I_appliances_I_fridge 
+smart_home_mgmt_I_shm_I_appliances_I_fridge : freezer-temperature : string   {celcius} {Config : false}
+smart_home_mgmt_I_shm_I_appliances_I_fridge : fridge-temperature : string   {celcius} {Config : false}
+smart_home_mgmt_I_shm_I_appliances_I_fridge : +ip-address : identityref {ip-address}  {key}  {Config : true}
+smart_home_mgmt_I_shm_I_appliances_I_fridge : power-consumed : identityref {power-consumed}  
+smart_home_mgmt_I_shm_I_appliances_I_fridge : voltage : identityref {voltage}  
+smart_home_mgmt_I_shm_I_appliances_I_fridge : current : identityref {current}  
+smart_home_mgmt_I_shm_I_appliances_I_fridge : port : identityref {port}  
+smart_home_mgmt_I_shm_I_appliances_I_fridge : uptime : identityref {uptime}  
+smart_home_mgmt_I_shm_I_appliances : appliance-count : uint32   {count} {Config : false}
+smart_home_mgmt : configure-appliance( in: ip_address in: port out: status)
+smart_home_mgmt : poll-appliance( in: ip_address in: port)
+smart_home_mgmt : manage-appliance( in: ip_address in: port in: action out: status)
+smart_home_mgmt : metrics( in: ip_address in: port)
+class "ip-address" as ip_address << (I,Silver) identity>> 
+class "port" as port << (I,Silver) identity>> 
+class "power-consumed" as power_consumed << (I,Silver) identity>> 
+class "voltage" as voltage << (I,Silver) identity>> 
+class "current" as current << (I,Silver) identity>> 
+class "uptime" as uptime << (I,Silver) identity>> 
+smart_home_mgmt_I_shm_I_appliances_I_ac-->ip_address: ip-address
+smart_home_mgmt_I_shm_I_appliances_I_ac-->power_consumed: power-consumed
+smart_home_mgmt_I_shm_I_appliances_I_ac-->voltage: voltage
+smart_home_mgmt_I_shm_I_appliances_I_ac-->current: current
+smart_home_mgmt_I_shm_I_appliances_I_ac-->port: port
+smart_home_mgmt_I_shm_I_appliances_I_ac-->uptime: uptime
+smart_home_mgmt_I_shm_I_appliances_I_fridge-->ip_address: ip-address
+smart_home_mgmt_I_shm_I_appliances_I_fridge-->power_consumed: power-consumed
+smart_home_mgmt_I_shm_I_appliances_I_fridge-->voltage: voltage
+smart_home_mgmt_I_shm_I_appliances_I_fridge-->current: current
+smart_home_mgmt_I_shm_I_appliances_I_fridge-->port: port
+smart_home_mgmt_I_shm_I_appliances_I_fridge-->uptime: uptime
+} 
+
+center footer
+ <size:20> UML Generated : 2023-01-24 11:55 </size>
+ endfooter 
+@enduml 
