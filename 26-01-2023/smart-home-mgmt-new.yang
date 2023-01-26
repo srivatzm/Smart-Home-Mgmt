@@ -1,0 +1,253 @@
+module smart-home-mgmt {
+  namespace "shm:params:xml:ns:yang";
+  prefix shm;
+
+  import ietf-inet-types {
+    prefix inet;
+  }
+
+  organization
+    "SHM Inc.";
+  contact
+    "support@shm.com";
+  description
+    "Smart Home Management Yang Spec.";
+
+  revision 2023-01-26;
+  container shm {
+    uses devices;
+    presence "Empty shm";
+  }
+  grouping endpoint {
+    description
+      "A reusable endpoint group.";
+    leaf ip {
+      type inet:ip-address;
+    }
+    leaf port {
+      type inet:port-number;
+    }
+  }
+
+  grouping common-params {
+    container common-params {
+      leaf power-consumed {
+        type uint8;
+      }
+      leaf voltage {
+        type uint8;
+      }
+      leaf current {
+        type uint8;
+      }
+      leaf uptime {
+        type string;
+      }
+    }
+  }
+
+  grouping devices {
+      container device-group {
+          description "Represents the 'shm' devices resource.";
+          list ac {
+              uses common-params;
+              uses endpoint;
+              key device-id;
+              description 
+                  "Represents one 'ac' resource within the
+                   'shm' devices resource.";
+              leaf device-id {
+                  type string;
+                  config true;
+                  description "Represents unique UUID format ID of an device";
+              }
+              leaf mode {
+                  type string;
+                  description "The mode of the ac.";
+              }
+              leaf temperature {
+                  type uint8;
+                  description "The temperature of the ac.";
+              }
+              leaf off-timer {
+                  type string;
+                  description "The off timer of the ac";
+              }
+          }
+          list fridge {
+              key device-id;
+              description 
+                  "Represents one 'fridge' resource within the
+                   'shm' devices resource.";
+              leaf device-id {
+                  type string;
+                  config true;
+                  description "Unique UUID identifier for fridge.";
+              }
+              leaf freezer-temperature {
+                  type uint8;
+                  units celcius;
+                  description "The temperature of the freezer.";
+              }
+              leaf fridge-temperature {
+                  type uint8;
+                  units celcius;
+                  description "The temperature of the fridge.";
+              }
+              uses common-params;
+              uses endpoint;
+          }
+          list any-device {
+              description "Placeholder for future device.";
+              key device-id;
+              leaf device-id {
+                  config true;
+                  type string;
+                  description "Unique UUID for future device.";
+              }
+              leaf characteristic1 {
+                  type string;
+              }
+              leaf characteristic2 {
+                  type string;
+              }
+              uses common-params;
+              uses endpoint;
+          }
+          leaf device-count {
+              type uint32;
+              description "Number of devices managed in the shm.";
+          }
+      }
+  }
+
+  rpc configure-device {
+    description
+      "Control function for configuring an device in the SHM.";
+    input {
+      uses endpoint;
+    }
+    output {
+      leaf status {
+        type string;
+        description
+          "response code";
+      }
+    }
+  }
+
+  rpc poll-device {
+    description
+      "Function for polling an device in the SHM.";
+    input {
+        uses endpoint;
+    }
+    output {
+      choice device {
+        case ac {
+          leaf temperature {
+            type uint8;
+            units "celcius";
+            mandatory false;
+            description
+              "The temperature of the ac.";
+          }
+          leaf mode {
+            type string;
+            description
+              "The mode of the ac.";
+          }
+          leaf off-timer {
+            type string;
+            description
+              "The off timer of the ac";
+          }
+        }
+        case fridge {
+          leaf freezer-temperature {
+            type uint8;
+            units "celcius";
+            mandatory false;
+            description
+              "The temperature of the freezer.";
+          }
+          leaf fridge-temperature {
+            type uint8;
+            units "celcius";
+            mandatory false;
+            description
+              "The temperature of the fridge.";
+          }
+        }
+      }
+    }
+  }
+
+  rpc manage-device {
+    description
+      "Function for managing an device in the SHM.";
+    input {
+      uses endpoint;
+      leaf action {
+        type string;
+        description
+          "Command to be sent to the device.";
+      }
+    }
+    output {
+      leaf status {
+        type string;
+        description
+          "response code";
+      }
+    }
+  }
+
+  rpc metrics {
+    description
+      "Function for retrieving metrics of an device in the SHM.";
+    input {
+      uses endpoint;
+    }
+    output {
+      uses common-params;
+      choice device {
+        case ac {
+          leaf temperature {
+            type uint8;
+            units "celcius";
+            mandatory false;
+            description
+              "The temperature of the ac.";
+          }
+          leaf mode {
+            type string;
+            description
+              "The mode of the ac.";
+          }
+          leaf off-timer {
+            type string;
+            description
+              "The off timer of the ac";
+          }
+        }
+        case fridge {
+          leaf freezer-temperature {
+            type string;
+            units "celcius";
+            mandatory false;
+            description
+              "The temperature of the freezer.";
+          }
+          leaf fridge-temperature {
+            type string;
+            units "celcius";
+            mandatory false;
+            description
+              "The temperature of the fridge.";
+          }          
+        }
+      }
+    }
+  }
+}
